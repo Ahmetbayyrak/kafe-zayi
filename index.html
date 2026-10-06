@@ -194,12 +194,33 @@
                 <input type="hidden" id="w-product">
             </div>
 
-            <!-- MİKTAR -->
+            <!-- MİKTAR VE HIZLI SEÇİM (1-15) -->
             <div class="form-group">
-                <label style="font-size:0.85rem; color:var(--text-muted);">Miktar</label>
-                <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2">
+                <label style="font-size:0.85rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span>Miktar</span>
+                    <span style="font-size:0.75rem; color:var(--primary);">Hızlı Seçim (1-15)</span>
+                </label>
+                <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2" style="margin-bottom:8px;">
+                
+                <!-- 1'den 15'e Hızlı Seçim Butonları -->
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 12px;">
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(1)">1</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(2)">2</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(3)">3</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(4)">4</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(5)">5</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(6)">6</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(7)">7</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(8)">8</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(9)">9</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(10)">10</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(11)">11</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(12)">12</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(13)">13</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(14)">14</button>
+                    <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(15)">15</button>
+                </div>
             </div>
-
             <!-- ZAYİ NEDENİ -->
             <div class="form-group">
                 <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Nedeni</label>
