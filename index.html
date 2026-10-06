@@ -138,9 +138,23 @@
                     </div>
 
                     <div class="card" style="border:1px solid var(--primary); margin-bottom:15px;">
+                        <h3 style="color:var(--primary); margin-bottom:10px;">✏️ Ürün Fiyatları Yönetimi</h3>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+                            Klavyeden ürün adı aratarak mevcut fiyatı güncelleyebilirsiniz.
+                        </p>
+                        <div style="position: relative; margin-bottom: 12px;">
+                            <input type="text" id="update-prod-search" class="form-control" placeholder="Ürün ara (Klavyeden yazın)..." oninput="filterUpdateProducts()" autocomplete="off" style="margin-bottom:0;">
+                            <div id="update-product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:160px; overflow-y:auto; z-index:1100;"></div>
+                            <input type="hidden" id="update-prod-name">
+                        </div>
+                        <input type="number" step="any" id="update-prod-price" class="form-control" placeholder="Yeni Fiyat (₺)">
+                        <button class="btn btn-primary" onclick="updateProductPrice()">Fiyatı Güncelle</button>
+                    </div>
+
+                    <div class="card" style="border:1px solid var(--primary); margin-bottom:15px;">
                         <h3 style="color:var(--primary); margin-bottom:10px;">📊 Gün Sonu Rapor & Sıfırlama</h3>
                         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
-                            Günün sonunda bu butona basarak zayi raporunu Excel olarak indirebilir ve sistem kayıtlarını yeni gün için otomatik temizleyebilirsiniz.
+                            Günün sonunda bu butona basarak zayi raporunu indirebilir ve sistem kayıtlarını yeni gün için otomatik temizleyebilirsiniz.
                         </p>
                         <button class="btn btn-success" onclick="closeDayAndExport()">📥 Günü Kapat & Raporu İndir</button>
                     </div>
@@ -148,33 +162,9 @@
                     <div class="card" style="border:1px solid var(--danger);">
                         <h3 style="color:var(--danger); margin-bottom:10px;">🧹 Ayı Kapat & Sıfırla</h3>
                         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
-                            Ay sonunda tüm biriken kayıtları Excel olarak indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
+                            Ay sonunda tüm biriken kayıtları indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
                         </p>
                         <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Sıfırla</button>
-                       <!-- ADMIN ÜRÜN FİYAT GÜNCELLEME -->
-        <div class="card" style="margin-top: 20px;">
-            <div class="card-header">
-                <h3>Ürün Fiyatları Yönetimi</h3>
-            </div>
-            <div class="card-body">
-                <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-                    <select id="price-product-select" class="form-control" onchange="loadCurrentPrice()">
-                        <!-- Ürünler otomatik dolacak -->
-                    </select>
-                    <input type="number" id="price-input" class="form-control" placeholder="Yeni Fiyat (₺)" step="0.01">
-                    <button class="btn btn-primary" onclick="updateProductPrice()" style="white-space: nowrap;">Güncelle</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-                    <select id="price-product-select" class="form-control" onchange="loadCurrentPrice()">
-                        <!-- Ürünler buraya JS ile dolacak -->
-                    </select>
-                    <input type="number" id="price-input" class="form-control" placeholder="Yeni Fiyat (₺)" step="0.01">
-                    <button class="btn btn-primary" onclick="updateProductPrice()" style="white-space: nowrap;">Güncelle</button>
-                </div>
-            </div>
-        </div>
                     </div>
                 </div>
             </main>
@@ -186,7 +176,6 @@
         <div class="modal">
             <h3 style="margin-bottom:14px;">🗑️ Zayi Ekle</h3>
             
-            <!-- ZAYİ EDİLEN ÜRÜN (KLAVYEDEN ARAMALI) -->
             <div class="form-group" style="position: relative; margin-bottom: 12px;">
                 <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün</label>
                 <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın (Örn: Çilek)..." oninput="filterProducts()" autocomplete="off" style="margin-bottom:0;">
@@ -194,7 +183,6 @@
                 <input type="hidden" id="w-product">
             </div>
 
-            <!-- MİKTAR VE HIZLI SEÇİM (1-15) -->
             <div class="form-group">
                 <label style="font-size:0.85rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                     <span>Miktar</span>
@@ -202,7 +190,6 @@
                 </label>
                 <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2" style="margin-bottom:8px;">
                 
-                <!-- 1'den 15'e Hızlı Seçim Butonları -->
                 <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 12px;">
                     <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(1)">1</button>
                     <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(2)">2</button>
@@ -221,7 +208,7 @@
                     <button type="button" class="btn btn-outline" style="padding: 6px 0; font-size: 0.85rem;" onclick="setAmount(15)">15</button>
                 </div>
             </div>
-            <!-- ZAYİ NEDENİ -->
+
             <div class="form-group">
                 <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Nedeni</label>
                 <select id="w-reason" class="form-control">
@@ -229,9 +216,8 @@
                     <option value="SKT Geçti / Bozuldu">SKT Geçti / Bozuldu</option>
                     <option value="Hatalı Hazırlık">Hatalı Hazırlık</option>
                     <option value="İkram / Personel">İkram / Personel</option>
-                     <option value="Personel Tüketim / ">Personel Tüketim / </option>
-                    <option value="Müşteri İade / "> Müşteri İade / </option>
-
+                    <option value="Personel Tüketim">Personel Tüketim</option>
+                    <option value="Müşteri İade">Müşteri İade</option>
                 </select>
             </div>
 
@@ -242,7 +228,7 @@
         </div>
     </div>
 
-    <!-- FIREBASE & SCRIPT -->
+    <!-- SCRIPT -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCSwg7TWH__ZaPVlvpFOI3s_mUJn0mhUfk",
@@ -258,148 +244,146 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ÜRÜNLER VE BİRİM FİYATLARI
-        const PRODUCTS = {
+        let PRODUCTS = {
             "STRAWBERRY CUP (ADET)": 50.0,
-"ÇİLEK RÜYASI (ADET)": 50.0,
-"LOTUS CUP (ADET)": 65.0,
-"SUPANGLE CUP (ADET)": 45.0,
-"PROFİTEROL CUP (ADET)": 45.0,
-"KARADUT CUP (ADET)": 50.0,
-"FRAMBUAZ PANNA COTTA CUP (ADET)": 55.0,
-"ÇİKOLATA PANNA COTTA CUP (ADET)": 55.0,
-"MUZLU CUP (ADET)": 50.0,
-"SPOONFUL CUP (ADET)": 55.0,
-"OREOLU CUP (ADET)": 50.0,
-"CHO CHERRY MUFFIN (ADET)": 59.55,
-"ÇİKOLATALI BROWNİ (ADET)": 69.37,
-"ÇİKOLATALI COOKIE PİE (ADET)": 107.49,
-"ÇİKOLATALI PASTA (ADET)": 90.81,
-"HAVUÇLU KEK (ADET)": 29.19,
-"KAHVELİ PASTA (ADET)": 70.68,
-"KAKAOLU KEK (ADET)": 35.63,
-"KARA ORMAN PASTA (ADET)": 87.64,
-"KARAMELLİ FINDIKLI MUFFİN (ADET)": 52.48,
-"LİMONLU KEK (ADET)": 32.11,
-"TİRAMİSU PASTA (ADET)": 52.75,
-"YER FISTIKLI KARAMELLİ (ADET)": 72.83,
-"MOZAİK PASTA (ADET)": 0,
-"HAVUÇLU PANNA COTTA (ADET)": 63.25,
-"BEYAZ PEY POĞAÇA (ADET)": 15.0,
-"DANA JAM KAŞ PEY SAND (ADET)": 79.59,
-"DEREOTLU PEY POĞAÇA (ADET)": 15.0,
-"KAŞAR PEY POĞAÇA (ADET)": 15.0,
-"PATATESLİ PEY ÖRGÜ AÇMA (ADET)": 15.0,
-"ZEYTİNLİ AÇMA (ADET)": 15.0,
-"DANA JAMBON MOZARELLA (ADET)": 94.35,
-"HİNDİ JAMBONLU PEYNİRLİ (ADET)": 87.12,
-"SADE AÇMA (ADET)": 15.0,
-"BODRUM MANDALİNASI (ADET)": 0,
-"ÇİLEK BUBBLE TEA (ADET)": 23.5,
-"ÇİLEKLİ LİMONATA (ADET)": 14.26,
-"EV YAPIMI LİMONATA (ADET)": 11.3,
-"HİBISCUS LİMONATA (ADET)": 0,
-"ICE COOL LIME (ADET)": 0,
-"ICE HIBISCUS (ADET)": 0,
-"LİMONATA (ADET)": 0,
-"SADE SODA (ADET)": 7.47,
-"SU (ADET)": 4.58,
-"YABAN MERSİNİ BUBBLE TEA (ADET)": 0,
-"YEŞİL ELMA BUBBLE TEA (ADET)": 0,
-"MEYVELİ SODA (ADET)": 9.53,
-"GAZOZ (ADET)": 0,
-"PORTAKAL SUYU (ADET)": 0,
-"İTALYAN SODA KIRMIZI (ADET)": 0,
-"İTALYAN SODA YEŞİL (ADET)": 0,
-"İTALYAN SODA MAVİ (ADET)": 0,
-"ÇİKOLATALI MILKSHAKE (ADET)": 0,
-"ÇİLEKLİ MILKSHAKE (ADET)": 0,
-"KARAMEL MILKSHAKE (ADET)": 0,
-"VANİLYA MILKSHAKE (ADET)": 0,
-"ÇAY (ADET)": 4.5,
-"ÇAY ORTA (ADET)": 0,
-"ÇAY BÜYÜK (ADET)": 0,
-"KARIŞIK MEYVE (ADET)": 0,
-"KUŞBURNU (ADET)": 0,
-"YASEMİNLİ YEŞİL ÇAY (ADET)": 0,
-"YEŞİL ÇAY (ADET)": 0,
-"ÇİLEK ÇAYI (ADET)": 0,
-"ELMA TARÇIN ÇAYI (ADET)": 0,
-"ICE AMERICANO (ADET)": 0,
-"ICE CAPPUCCINO (ADET)": 0,
-"ICE CARAMEL MACCHIATO (ADET)": 0,
-"ICE CHAI TEA LATTE (ADET)": 0,
-"ICE FİLTRE KAHVE (ADET)": 13.65,
-"ICE FLAT WHITE (ADET)": 0,
-"ICE LATTE (ADET)": 25.0,
-"ICE LATTE MACCHIATO (ADET)": 0,
-"ICE MOCHA (ADET)": 0,
-"ICE WHITE MOCHA (ADET)": 0,
-"WHITE C FRAPPE (ADET)": 0,
-"CARAMEL FRAPPE (ADET)": 0,
-"CHOCOLATE FRAPPE (ADET)": 0,
-"ICE TOFFEE-NUT LATTE (ADET)": 0,
-"BUZ BARDAK (ADET)": 0,
-"AMERICANO (B) (ADET)": 0,
-"BEYAZ ÇİKOLATA (B) (ADET)": 0,
-"CAFFE BISCUIT (B) (ADET)": 0,
-"CAPPUCCINO (B) (ADET)": 0,
-"CARAMEL MACCHIATO (B) (ADET)": 0,
-"CHAI TEA LATTE (B) (ADET)": 0,
-"ESPRESSO (B) (ADET)": 0,
-"FİLTRE KAHVE (B) (ADET)": 0,
-"FLAT WHITE (B) (ADET)": 0,
-"LATTE (B) (ADET)": 0,
-"LATTE MACCHIATO (B) (ADET)": 0,
-"MOCHA (B) (ADET)": 0,
-"ORANGE LATTE (B) (ADET)": 0,
-"PUMPKIN SPICE LATTE (B) (ADET)": 0,
-"RED EYE (B) (ADET)": 0,
-"SALEP (B) (ADET)": 0,
-"SICAK ÇİKOLATA (B) (ADET)": 0,
-"SWEET BERRY LATTE (B) (ADET)": 0,
-"TOFFEE - NUT LATTE (B) (ADET)": 0,
-"DUBLE TÜRK KAHVESİ (ADET)": 0,
-"WHITE MOCHA (B) (ADET)": 0,
-"AMERICANO (ADET)": 0,
-"BEYAZ ÇİKOLATA (ADET)": 0,
-"CAFFE BISCUIT (ADET)": 28.01,
-"CAPPUCCINO (ADET)": 24.55,
-"CARAMEL MACCHIATO (ADET)": 28.01,
-"CHAI TEA LATTE (ADET)": 28.01,
-"ESPRESSO (ADET)": 11.2,
-"FİLTRE KAHVE (ADET)": 0,
-"FLAT WHITE (ADET)": 0,
-"LATTE (ADET)": 24.55,
-"LATTE MACCHIATO (ADET)": 24.55,
-"MOCHA (ADET)": 28.01,
-"ORANGE LATTE (ADET)": 28.01,
-"PUMPKIN SPICE LATTE (ADET)": 28.01,
-"RED EYE (ADET)": 0,
-"SALEP (ADET)": 0,
-"SICAK ÇİKOLATA (ADET)": 24.35,
-"SWEET BERRY LATTE (ADET)": 24.35,
-"TOFFEE - NUT LATTE (ADET)": 24.35,
-"TÜRK KAHVESİ (ADET)": 0,
-"WHITE MOCHA (ADET)": 24.35,
-"DUBAİ ÇİKOLATASI 50 GR (ADET)": 60.0,
-"ÇİLEKLİ ÇİKOLATA 50 GR (ADET)": 60.0,
-"CEVİZLİ ÇİKOLATA 50 GR (ADET)": 60.0,
-"YABAN MERSİNİ ÇİKOLATA 50 GR (ADET)": 60.0,
-"DUBAİ ÇİKOLATASI 100 GR (ADET)": 120.0,
-"ÇİLEKLİ ÇİKOLATA 100 GR (ADET)": 120.0,
-"CEVİZLİ ÇİKOLATA 100 GR (ADET)": 120.0,
-"YABAN MERSİNİ ÇİKOLATA 100 GR (ADET)": 120.0,
-"SÜTLAÇ (ADET)": 48.0,
-"KAZANDİBİ (ADET)": 65.0,
-"FRAMBUAZ CHEESECAKE (ADET)": 71.51,
-"LİMONLU CHEESECAKE (ADET)": 71.7,
-"ÇİKOLATALI CHEESECAKE (ADET)": 77.14
+            "ÇİLEK RÜYASI (ADET)": 50.0,
+            "LOTUS CUP (ADET)": 65.0,
+            "SUPANGLE CUP (ADET)": 45.0,
+            "PROFİTEROL CUP (ADET)": 45.0,
+            "KARADUT CUP (ADET)": 50.0,
+            "FRAMBUAZ PANNA COTTA CUP (ADET)": 55.0,
+            "ÇİKOLATA PANNA COTTA CUP (ADET)": 55.0,
+            "MUZLU CUP (ADET)": 50.0,
+            "SPOONFUL CUP (ADET)": 55.0,
+            "OREOLU CUP (ADET)": 50.0,
+            "CHO CHERRY MUFFIN (ADET)": 59.55,
+            "ÇİKOLATALI BROWNİ (ADET)": 69.37,
+            "ÇİKOLATALI COOKIE PİE (ADET)": 107.49,
+            "ÇİKOLATALI PASTA (ADET)": 90.81,
+            "HAVUÇLU KEK (ADET)": 29.19,
+            "KAHVELİ PASTA (ADET)": 70.68,
+            "KAKAOLU KEK (ADET)": 35.63,
+            "KARA ORMAN PASTA (ADET)": 87.64,
+            "KARAMELLİ FINDIKLI MUFFİN (ADET)": 52.48,
+            "LİMONLU KEK (ADET)": 32.11,
+            "TİRAMİSU PASTA (ADET)": 52.75,
+            "YER FISTIKLI KARAMELLİ (ADET)": 72.83,
+            "MOZAİK PASTA (ADET)": 0,
+            "HAVUÇLU PANNA COTTA (ADET)": 63.25,
+            "BEYAZ PEY POĞAÇA (ADET)": 15.0,
+            "DANA JAM KAŞ PEY SAND (ADET)": 79.59,
+            "DEREOTLU PEY POĞAÇA (ADET)": 15.0,
+            "KAŞAR PEY POĞAÇA (ADET)": 15.0,
+            "PATATESLİ PEY ÖRGÜ AÇMA (ADET)": 15.0,
+            "ZEYTİNLİ AÇMA (ADET)": 15.0,
+            "DANA JAMBON MOZARELLA (ADET)": 94.35,
+            "HİNDİ JAMBONLU PEYNİRLİ (ADET)": 87.12,
+            "SADE AÇMA (ADET)": 15.0,
+            "BODRUM MANDALİNASI (ADET)": 0,
+            "ÇİLEK BUBBLE TEA (ADET)": 23.5,
+            "ÇİLEKLİ LİMONATA (ADET)": 14.26,
+            "EV YAPIMI LİMONATA (ADET)": 11.3,
+            "HİBISCUS LİMONATA (ADET)": 0,
+            "ICE COOL LIME (ADET)": 0,
+            "ICE HIBISCUS (ADET)": 0,
+            "LİMONATA (ADET)": 0,
+            "SADE SODA (ADET)": 7.47,
+            "SU (ADET)": 4.58,
+            "YABAN MERSİNİ BUBBLE TEA (ADET)": 0,
+            "YEŞİL ELMA BUBBLE TEA (ADET)": 0,
+            "MEYVELİ SODA (ADET)": 9.53,
+            "GAZOZ (ADET)": 0,
+            "PORTAKAL SUYU (ADET)": 0,
+            "İTALYAN SODA KIRMIZI (ADET)": 0,
+            "İTALYAN SODA YEŞİL (ADET)": 0,
+            "İTALYAN SODA MAVİ (ADET)": 0,
+            "ÇİKOLATALI MILKSHAKE (ADET)": 0,
+            "ÇİLEKLİ MILKSHAKE (ADET)": 0,
+            "KARAMEL MILKSHAKE (ADET)": 0,
+            "VANİLYA MILKSHAKE (ADET)": 0,
+            "ÇAY (ADET)": 4.5,
+            "ÇAY ORTA (ADET)": 0,
+            "ÇAY BÜYÜK (ADET)": 0,
+            "KARIŞIK MEYVE (ADET)": 0,
+            "KUŞBURNU (ADET)": 0,
+            "YASEMİNLİ YEŞİL ÇAY (ADET)": 0,
+            "YEŞİL ÇAY (ADET)": 0,
+            "ÇİLEK ÇAYI (ADET)": 0,
+            "ELMA TARÇIN ÇAYI (ADET)": 0,
+            "ICE AMERICANO (ADET)": 0,
+            "ICE CAPPUCCINO (ADET)": 0,
+            "ICE CARAMEL MACCHIATO (ADET)": 0,
+            "ICE CHAI TEA LATTE (ADET)": 0,
+            "ICE FİLTRE KAHVE (ADET)": 13.65,
+            "ICE FLAT WHITE (ADET)": 0,
+            "ICE LATTE (ADET)": 25.0,
+            "ICE LATTE MACCHIATO (ADET)": 0,
+            "ICE MOCHA (ADET)": 0,
+            "ICE WHITE MOCHA (ADET)": 0,
+            "WHITE C FRAPPE (ADET)": 0,
+            "CARAMEL FRAPPE (ADET)": 0,
+            "CHOCOLATE FRAPPE (ADET)": 0,
+            "ICE TOFFEE-NUT LATTE (ADET)": 0,
+            "BUZ BARDAK (ADET)": 0,
+            "AMERICANO (B) (ADET)": 0,
+            "BEYAZ ÇİKOLATA (B) (ADET)": 0,
+            "CAFFE BISCUIT (B) (ADET)": 0,
+            "CAPPUCCINO (B) (ADET)": 0,
+            "CARAMEL MACCHIATO (B) (ADET)": 0,
+            "CHAI TEA LATTE (B) (ADET)": 0,
+            "ESPRESSO (B) (ADET)": 0,
+            "FİLTRE KAHVE (B) (ADET)": 0,
+            "FLAT WHITE (B) (ADET)": 0,
+            "LATTE (B) (ADET)": 0,
+            "LATTE MACCHIATO (B) (ADET)": 0,
+            "MOCHA (B) (ADET)": 0,
+            "ORANGE LATTE (B) (ADET)": 0,
+            "PUMPKIN SPICE LATTE (B) (ADET)": 0,
+            "RED EYE (B) (ADET)": 0,
+            "SALEP (B) (ADET)": 0,
+            "SICAK ÇİKOLATA (B) (ADET)": 0,
+            "SWEET BERRY LATTE (B) (ADET)": 0,
+            "TOFFEE - NUT LATTE (B) (ADET)": 0,
+            "DUBLE TÜRK KAHVESİ (ADET)": 0,
+            "WHITE MOCHA (B) (ADET)": 0,
+            "AMERICANO (ADET)": 0,
+            "BEYAZ ÇİKOLATA (ADET)": 0,
+            "CAFFE BISCUIT (ADET)": 28.01,
+            "CAPPUCCINO (ADET)": 24.55,
+            "CARAMEL MACCHIATO (ADET)": 28.01,
+            "CHAI TEA LATTE (ADET)": 28.01,
+            "ESPRESSO (ADET)": 11.2,
+            "FİLTRE KAHVE (ADET)": 0,
+            "FLAT WHITE (ADET)": 0,
+            "LATTE (ADET)": 24.55,
+            "LATTE MACCHIATO (ADET)": 24.55,
+            "MOCHA (ADET)": 28.01,
+            "ORANGE LATTE (ADET)": 28.01,
+            "PUMPKIN SPICE LATTE (ADET)": 28.01,
+            "RED EYE (ADET)": 0,
+            "SALEP (ADET)": 0,
+            "SICAK ÇİKOLATA (ADET)": 24.35,
+            "SWEET BERRY LATTE (ADET)": 24.35,
+            "TOFFEE - NUT LATTE (ADET)": 24.35,
+            "TÜRK KAHVESİ (ADET)": 0,
+            "WHITE MOCHA (ADET)": 24.35,
+            "DUBAİ ÇİKOLATASI 50 GR (ADET)": 60.0,
+            "ÇİLEKLİ ÇİKOLATA 50 GR (ADET)": 60.0,
+            "CEVİZLİ ÇİKOLATA 50 GR (ADET)": 60.0,
+            "YABAN MERSİNİ ÇİKOLATA 50 GR (ADET)": 60.0,
+            "DUBAİ ÇİKOLATASI 100 GR (ADET)": 120.0,
+            "ÇİLEKLİ ÇİKOLATA 100 GR (ADET)": 120.0,
+            "CEVİZLİ ÇİKOLATA 100 GR (ADET)": 120.0,
+            "YABAN MERSİNİ ÇİKOLATA 100 GR (ADET)": 120.0,
+            "SÜTLAÇ (ADET)": 48.0,
+            "KAZANDİBİ (ADET)": 65.0,
+            "FRAMBUAZ CHEESECAKE (ADET)": 71.51,
+            "LİMONLU CHEESECAKE (ADET)": 71.7,
+            "ÇİKOLATALI CHEESECAKE (ADET)": 77.14
         };
 
-
         const USERS = {
-                     "admin": { pass: "03vh76hg", name: "Yönetici (Admin)", role: "admin" },
+            "admin": { pass: "03vh76hg", name: "Yönetici (Admin)", role: "admin" },
             "ahmet": { pass: "1", name: "Ahmet Bayrak", role: "staff" },
             "öner": { pass: "2", name: "Öner Yıldırım", role: "staff" },
             "alperen": { pass: "3", name: "Alperen Akça", role: "staff" },
@@ -407,7 +391,7 @@
             "nisa": { pass: "5", name: "Nisa Nur Halat", role: "staff" },
             "ömer": { pass: "6", name: "Ömer Aygün", role: "staff" },
             "salih": { pass: "7", name: "Salih Can Duman", role: "staff" },
-            "züriye ": { pass: "8", name: "Züriye Altan", role: "staff" },
+            "züriye": { pass: "8", name: "Züriye Altan", role: "staff" },
             "fatih": { pass: "9", name: "Fatih Keleş", role: "staff" },
             "gökçe": { pass: "10", name: "Gökçe Oktay", role: "staff" },
             "gülşah": { pass: "11", name: "Gülşah Keskin", role: "staff" },
@@ -421,11 +405,10 @@
             "ebrar": { pass: "19", name: "Elif Ebrar Atan", role: "staff" },
             "erhan": { pass: "20", name: "Erhan Memiş", role: "staff" },
             "eslem": { pass: "21", name: "Sümeyye Eslem Bulun", role: "staff" },
-            "arda": { pass: "22", name: "Yasin Arda Kalenderoğlu", role: "staff" },
-            "ömer": { pass: "23", name: "Ömer Arda Yaylı", role: "staff" },
+            "yasin": { pass: "22", name: "Yasin Arda Kalenderoğlu", role: "staff" },
+            "ömerarda": { pass: "23", name: "Ömer Arda Yaylı", role: "staff" },
             "melike": { pass: "24", name: "Melike İner", role: "staff" },
-            "anıl": { pass: "25", name: "Anıl Kılakay", role: "staff" },
-
+            "anıl": { pass: "25", name: "Anıl Kılakay", role: "staff" }
         };
 
         let currentUser = null;
@@ -470,7 +453,10 @@
         }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // ÜRÜN ARAMA FİLTRESİ
+        function setAmount(val) {
+            document.getElementById('w-amount').value = val;
+        }
+
         function filterProducts() {
             const query = document.getElementById('w-product-search').value.toLowerCase();
             const dropdown = document.getElementById('product-dropdown');
@@ -490,6 +476,39 @@
                         e.preventDefault();
                         document.getElementById('w-product-search').value = p;
                         document.getElementById('w-product').value = p;
+                        dropdown.style.display = 'none';
+                    };
+                    dropdown.appendChild(div);
+                }
+            }
+            
+            if (matches > 0 && query.length > 0) {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        function filterUpdateProducts() {
+            const query = document.getElementById('update-prod-search').value.toLowerCase();
+            const dropdown = document.getElementById('update-product-dropdown');
+            dropdown.innerHTML = '';
+            
+            let matches = 0;
+            for (let p in PRODUCTS) {
+                if (p.toLowerCase().includes(query)) {
+                    matches++;
+                    const div = document.createElement('div');
+                    div.style.padding = "10px";
+                    div.style.cursor = "pointer";
+                    div.style.borderBottom = "1px solid var(--border)";
+                    div.style.fontSize = "0.9rem";
+                    div.textContent = p + " (" + PRODUCTS[p] + " ₺)";
+                    div.onmousedown = function(e) {
+                        e.preventDefault();
+                        document.getElementById('update-prod-search').value = p;
+                        document.getElementById('update-prod-name').value = p;
+                        document.getElementById('update-prod-price').value = PRODUCTS[p];
                         dropdown.style.display = 'none';
                     };
                     dropdown.appendChild(div);
@@ -535,7 +554,6 @@
             }
         }
 
-        // YENİ ÜRÜN EKLEME (ADMIN)
         function addNewProduct() {
             const name = document.getElementById('new-prod-name').value.trim();
             const price = parseFloat(document.getElementById('new-prod-price').value);
@@ -544,7 +562,7 @@
                 alert("Lütfen ürün adı girin!");
                 return;
             }
-            if (isNaN(price) || price <= 0) {
+            if (isNaN(price) || price < 0) {
                 alert("Lütfen geçerli bir birim fiyat girin!");
                 return;
             }
@@ -557,22 +575,31 @@
                 alert("Hata: " + err.message);
             });
         }
-<!-- ÜRÜN FİYATLARI GÜNCELLEME YÖNETİMİ -->
-<div class="card" style="border:1px solid var(--primary); margin-bottom:15px;">
-    <h3 style="color:var(--primary); margin-bottom:10px;">✏️ Ürün Fiyatları Yönetimi</h3>
-    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
-        Klavyeden ürün adı aratarak mevcut fiyatı güncelleyebilirsiniz.
-    </p>
-    
-    <div style="position: relative; margin-bottom: 12px;">
-        <input type="text" id="update-prod-search" class="form-control" placeholder="Ürün ara (Klavyeden yazın)..." oninput="filterUpdateProducts()" autocomplete="off" style="margin-bottom:0;">
-        <div id="update-product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:160px; overflow-y:auto; z-index:1100;"></div>
-        <input type="hidden" id="update-prod-name">
-    </div>
 
-    <input type="number" step="any" id="update-prod-price" class="form-control" placeholder="Yeni Fiyat (₺)">
-    <button class="btn btn-primary" onclick="updateProductPrice()">Fiyatı Güncelle</button>
-</div>
+        function updateProductPrice() {
+            const name = document.getElementById('update-prod-name').value || document.getElementById('update-prod-search').value.trim();
+            const price = parseFloat(document.getElementById('update-prod-price').value);
+
+            if (!name || !PRODUCTS[name]) {
+                alert("Lütfen geçerli bir ürün seçin veya aratın!");
+                return;
+            }
+            if (isNaN(price) || price < 0) {
+                alert("Lütfen geçerli bir fiyat girin!");
+                return;
+            }
+
+            db.ref('urunler/' + name.replace(/[.#$[\]]/g, '_')).set(price).then(() => {
+                alert(`"${name}" ürününün fiyatı ${price} ₺ olarak güncellendi!`);
+                PRODUCTS[name] = price;
+                document.getElementById('update-prod-search').value = '';
+                document.getElementById('update-prod-name').value = '';
+                document.getElementById('update-prod-price').value = '';
+            }).catch(err => {
+                alert("Hata: " + err.message);
+            });
+        }
+
         function initApp() {
             db.ref('zayiler').on('value', snap => {
                 wasteData = snap.val() || {};
@@ -637,9 +664,9 @@
         }
 
         function resetMonthData() {
-            if (confirm("DİKKAT: Mevcut ayın tüm zayi kayıtları silinecek ve yeni aya başlanacak! Onaylıyor musunuz?")) {
+            if (confirm("Ayı kapatmak ve tüm kayıtları sıfırlamak istediğinize emin misiniz? Tüm geçmiş kayıtlar silinecektir.")) {
                 db.ref('zayiler').remove().then(() => {
-                    alert("Zayi kayıtları başarıyla sıfırlandı. Yeni ay başlatıldı!");
+                    alert("Aylık kayıtlar başarıyla sıfırlandı!");
                 });
             }
         }
