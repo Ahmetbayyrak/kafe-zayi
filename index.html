@@ -141,6 +141,17 @@
                             Ay sonunda tüm biriken kayıtları Excel olarak indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
                         </p>
                         <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Sıfırla</button>
+                                            <!-- YENİ ÜRÜN EKLEME KARTI -->
+                    <div class="card" style="border:1px solid var(--accent);">
+                        <h3 style="color:var(--accent); margin-bottom:10px;">➕ Yeni Ürün & Fiyat Ekle</h3>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+                            Sisteme yeni bir ürün ve birim fiyatı tanımlayabilirsiniz.
+                        </p>
+                        <input type="text" id="new-prod-name" class="form-control" placeholder="Ürün Adı (Örn: Latte (Adet))">
+                        <input type="number" step="any" id="new-prod-price" class="form-control" placeholder="Birim Fiyatı (TL)">
+                        <button class="btn btn-primary" onclick="addNewProduct()">Ürünü Ekle</button>
+                    </div>
+
                     </div>
                 </div>
             </main>
