@@ -101,7 +101,7 @@
                 <!-- TAB 1: ZAYİ LİSTESİ -->
                 <div id="tab-waste">
                     <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3>📋 Canlı Zayi Listesi</h3>
+                        <h3 id="table-title">📋 Canlı Zayi Listesi</h3>
                         <button class="btn btn-danger" onclick="openModal('modal-waste')">+ Zayi Gir</button>
                     </div>
 
@@ -111,7 +111,7 @@
                                 <thead>
                                     <tr>
                                         <th>Tarih</th>
-                                        <th>Personel</th>
+                                        <th class="admin-only-col" style="display:none;">Personel</th>
                                         <th>Ürün</th>
                                         <th>Miktar</th>
                                         <th>Neden</th>
@@ -127,14 +127,20 @@
 
                 <!-- TAB 2: ADMIN PANELİ -->
                 <div id="tab-admin" style="display:none;">
-                    <div class="card" style="border:1px solid var(--primary);">
+                    <div class="card" style="border:1px solid var(--primary); margin-bottom:15px;">
                         <h3 style="color:var(--primary); margin-bottom:10px;">📊 Gün Sonu Rapor & Sıfırlama</h3>
                         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
                             Günün sonunda bu butona basarak zayi raporunu Excel olarak indirebilir ve sistem kayıtlarını yeni gün için otomatik temizleyebilirsiniz.
                         </p>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <button class="btn btn-success" onclick="closeDayAndExport()">📥 Günü Kapat & Raporu İndir</button>
-                        </div>
+                        <button class="btn btn-success" onclick="closeDayAndExport()">📥 Günü Kapat & Raporu İndir</button>
+                    </div>
+
+                    <div class="card" style="border:1px solid var(--danger);">
+                        <h3 style="color:var(--danger); margin-bottom:10px;">🧹 Ayı Kapat & Sıfırla</h3>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+                            Ay sonunda tüm biriken kayıtları Excel olarak indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
+                        </p>
+                        <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Sıfırla</button>
                     </div>
                 </div>
             </main>
@@ -241,9 +247,11 @@
                 document.getElementById('user-badge').textContent = currentUser.name;
 
                 if (currentUser.role === 'admin') {
+                    document.getElementById('table-title').textContent = "📋 Tüm Personel Canlı Zayi Listesi";
                     document.querySelectorAll('.admin-only-nav').forEach(el => el.style.display = 'inline-block');
                     document.querySelectorAll('.admin-only-col').forEach(el => el.style.display = 'table-cell');
                 } else {
+                    document.getElementById('table-title').textContent = "📋 Benim Zayi Girişlerim";
                     document.querySelectorAll('.admin-only-nav').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.admin-only-col').forEach(el => el.style.display = 'none');
                 }
@@ -301,13 +309,20 @@
         function renderWasteTable() {
             const tbody = document.getElementById('waste-table-body');
             tbody.innerHTML = '';
+            const isAdmin = currentUser && currentUser.role === 'admin';
+
             for (let id in wasteData) {
                 const w = wasteData[id];
-                const isAdmin = currentUser && currentUser.role === 'admin';
+                
+                // Eğer kullanıcı admin değilse, sadece kendi kayıtlarını göster
+                if (!isAdmin && w.personel !== currentUser.name) {
+                    continue;
+                }
+
                 tbody.innerHTML += `
                     <tr>
                         <td>${w.tarih}</td>
-                        <td><strong>${w.personel}</strong></td>
+                        ${isAdmin ? `<td><strong>${w.personel}</strong></td>` : ''}
                         <td>${w.urun}</td>
                         <td>${w.miktar}</td>
                         <td><span class="badge" style="background:rgba(244,67,54,0.2); color:#f44336;">${w.neden}</span></td>
@@ -338,6 +353,15 @@
             if (confirm("Rapor indirildi. Bugünkü zayi kayıtları silinip yeni gün için sıfırlansın mı?")) {
                 db.ref('zayiler').remove().then(() => {
                     alert("Gün başarıyla kapatıldı ve kayıtlar sıfırlandı!");
+                });
+            }
+        }
+
+        // AYI KAPAT & SIFIRLA
+        function resetMonthData() {
+            if (confirm("DİKKAT: Mevcut ayın tüm zayi kayıtları silinecek ve yeni aya başlanacak! Onaylıyor musunuz?")) {
+                db.ref('zayiler').remove().then(() => {
+                    alert("Zayi kayıtları başarıyla sıfırlandı. Yeni ay başlatıldı!");
                 });
             }
         }
