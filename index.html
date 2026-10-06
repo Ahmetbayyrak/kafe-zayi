@@ -523,17 +523,19 @@
         }
 
         function addWasteEntry() {
-            const prod = document.getElementById('w-product').value || document.getElementById('w-product-search').value;
+            const prod = document.getElementById('w-product').value || document.getElementById('w-product-search').value.trim();
             const amount = parseFloat(document.getElementById('w-amount').value);
             const reason = document.getElementById('w-reason').value;
 
-            if (!prod || !PRODUCTS[prod]) {
-                alert("Lütfen listeden geçerli bir ürün seçin!");
+            if (!prod) {
+                alert("Lütfen bir ürün seçin veya yazın!");
                 return;
             }
 
+            // Fiyatı olmayan veya listede tam eşleşmeyen ürünler için 0₺ kabul ediyoruz, hata vermiyor kanka
+            const unitPrice = PRODUCTS[prod] !== undefined ? PRODUCTS[prod] : 0;
+
             if (!isNaN(amount) && amount > 0) {
-                const unitPrice = PRODUCTS[prod] || 0;
                 const totalCost = amount * unitPrice;
 
                 db.ref('zayiler').push({
