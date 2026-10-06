@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gastro Kafe - Personel & Admin Zayi Takip</title>
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <style>
+        [data-theme="dark"] {
+            --bg-primary: #181310;
+            --bg-card: #241d18;
+            --bg-sidebar: #120e0b;
+            --text-main: #f3ece6;
+            --text-muted: #a6988d;
+            --primary: #d97736;
+            --primary-hover: #f08c4a;
+            --accent: #e89558;
+            --accent-light: #2d2118;
+            --border: #3a2e26;
+            --danger: #f44336;
+            --success: #4caf50;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); }
+        body { background-color: var(--bg-primary); color: var(--text-main); min-height: 100vh; font-size: 15px; }
+
+        /* LOGIN SCREEN */
+        #login-screen { position: fixed; inset: 0; background: var(--bg-primary); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 30px; width: 100%; max-width: 400px; text-align: center; }
+
+        /* APP LAYOUT */
+        #app-screen { display: none; }
+        header { background: var(--bg-sidebar); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; sticky: top; }
+        .app-container { display: flex; max-width: 1280px; margin: 0 auto; padding: 20px; gap: 20px; }
+        aside { width: 220px; display: flex; flex-direction: column; gap: 8px; }
+        main { flex: 1; }
+
+        .card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .btn { padding: 10px 16px; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; border: none; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+
+        .form-control { width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-primary); color: var(--text-main); margin-bottom: 12px; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border); }
+        th { background: var(--accent-light); }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-card); border-radius: var(--radius-md); width: 100%; max-width: 480px; padding: 20px; border: 1px solid var(--border); }
+
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .admin-only { display: none !important; }
+
+        @media (max-width: 768px) {
+            .app-container { flex-direction: column; }
+            aside { width: 100%; flex-direction: row; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GİRİŞ EKRANI -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="margin-bottom:10px;">☕ Gastro Kafe Giriş</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;">Lütfen kullanıcı adınızı ve şifrenizi girin.</p>
+            <input type="text" id="login-user" class="form-control" placeholder="Kullanıcı Adı (Örn: ahmet)">
+            <input type="password" id="login-pass" class="form-control" placeholder="Şifre">
+            <button class="btn btn-primary" style="width:100%; padding:12px;" onclick="handleLogin()">Giriş Yap</button>
+            <div id="login-err" style="color:var(--danger); font-size:0.85rem; margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <!-- ANA UYGULAMA EKRANI -->
+    <div id="app-screen">
+        <header>
+            <div style="font-weight:800;">☕ GASTRO KAFE ZAYİ TAKİP</div>
+            <div>
+                <span id="user-badge" class="badge" style="background:var(--accent); color:#fff; margin-right:10px;"></span>
+                <button class="btn btn-outline btn-sm" onclick="handleLogout()">Çıkış Yap</button>
+            </div>
+        </header>
+
+        <div class="app-container">
+            <aside>
+                <button class="btn btn-outline" onclick="switchTab('waste')">🗑️ Zayi Girişi</button>
+                <button class="btn btn-outline admin-only-nav" onclick="switchTab('admin')">👑 Admin & Ay Sonu</button>
+            </aside>
+
+            <main>
+                <!-- TAB 1: ZAYİ LİSTESİ VE EKLEME -->
+                <div id="tab-waste">
+                    <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3>📋 Canlı Zayi Listesi</h3>
+                        <button class="btn btn-danger" onclick="openModal('modal-waste')">+ Zayi Gir</button>
+                    </div>
+
+                    <div class="card">
+                        <div style="overflow-x:auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Personel</th>
+                                        <th>Ürün</th>
+                                        <th>Miktar</th>
+                                        <th>Neden</th>
+                                        <th>Maliyet Kaybı</th>
+                                        <th class="admin-only-col">İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="waste-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: ADMIN VE AY SONU SIFIRLAMA -->
+                <div id="tab-admin" style="display:none;">
+                    <div class="card" style="border:1px solid var(--primary);">
+                        <h3 style="color:var(--primary); margin-bottom:10px;">📊 Admin Ay Sonu İşlemleri</h3>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+                            Bu panel sadece Admin tarafından görülebilir. Ay sonunda zayi raporunu bilgisayara indirip ekranı yeni ay için temizleyebilirsiniz.
+                        </p>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <button class="btn btn-success" onclick="exportToCSV()">📥 Aylık Zayi Raporunu İndir (Excel/CSV)</button>
+                            <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Zayileri Sıfırla</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>📦 Ürün ve Fiyat Tanımlama</h3>
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <input type="text" id="prod-name" class="form-control" placeholder="Ürün Adı (Örn: Croissant)">
+                            <input type="number" id="prod-price" class="form-control" placeholder="Birim Fiyat (₺)">
+                            <button class="btn btn-primary" onclick="saveProduct()">Ürün Ekle</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL: ZAYİ EKLE -->
+    <div id="modal-waste" class="modal-overlay">
+        <div class="modal">
+            <h3 style="margin-bottom:14px;">🗑️ Zayi Ekle</h3>
+            <div class="form-group">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün</label>
+                <select id="w-product" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Miktar</label>
+                <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2">
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Nedeni</label>
+                <select id="w-reason" class="form-control">
+                    <option value="Dökülme / Düşürme">Dökülme / Düşürme</option>
+                    <option value="SKT Geçti / Bozuldu">SKT Geçti / Bozuldu</option>
+                    <option value="Hatalı Hazırlık">Hatalı Hazırlık</option>
+                    <option value="İkram / Personel">İkram / Personel</option>
+                </select>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button class="btn btn-outline" onclick="closeModal('modal-waste')">İptal</button>
+                <button class="btn btn-danger" onclick="addWasteEntry()">Zayi Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE & SCRIPT -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCSwg7TWH__ZaPVlvpFOI3s_mUJn0mhUfk",
+            authDomain: "gastro-kafe.firebaseapp.com",
+            projectId: "gastro-kafe",
+            storageBucket: "gastro-kafe.firebasestorage.app",
+            messagingSenderId: "223854582314",
+            appId: "1:223854582314:web:01f43b7592765b3a6ac153",
+            measurementId: "G-FVPYJ7GGBH",
+            databaseURL: "https://gastro-kafe-default-rtdb.firebaseio.com"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // USER LIST (25 Personel + 1 Admin)
+        const USERS = {
+            "admin": { pass: "admin123", name: "Yönetici (Admin)", role: "admin" },
+            "ahmet": { pass: "1234", name: "Ahmet Bayrak", role: "staff" },
+            "mehmet": { pass: "1234", name: "Mehmet Yılmaz", role: "staff" },
+            "ayse": { pass: "1234", name: "Ayşe Kaya", role: "staff" },
+            "fatma": { pass: "1234", name: "Fatma Demir", role: "staff" }
+            // İhtiyaca göre kullanıcı isimleri buraya eklenebilir
+        };
+
+        let currentUser = null;
+        let productsData = {};
+        let wasteData = {};
+
+        function handleLogin() {
+            const u = document.getElementById('login-user').value.trim().toLowerCase();
+            const p = document.getElementById('login-pass').value.trim();
+
+            if (USERS[u] && USERS[u].pass === p) {
+                currentUser = USERS[u];
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'block';
+                document.getElementById('user-badge').textContent = currentUser.name;
+
+                if (currentUser.role === 'admin') {
+                    document.querySelectorAll('.admin-only-nav').forEach(el => el.style.display = 'inline-block');
+                } else {
+                    document.querySelectorAll('.admin-only-nav').forEach(el => el.style.display = 'none');
+                }
+                initApp();
+            } else {
+                document.getElementById('login-err').textContent = "Kullanıcı adı veya şifre hatalı!";
+            }
+        }
+
+        function handleLogout() {
+            location.reload();
+        }
+
+        function switchTab(t) {
+            document.getElementById('tab-waste').style.display = t === 'waste' ? 'block' : 'none';
+            document.getElementById('tab-admin').style.display = t === 'admin' ? 'block' : 'none';
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function saveProduct() {
+            const name = document.getElementById('prod-name').value.trim();
+            const price = parseFloat(document.getElementById('prod-price').value) || 0;
+            if (name) {
+                db.ref('urunler/' + name).set({ fiyat: price }).then(() => {
+                    document.getElementById('prod-name').value = '';
+                    document.getElementById('prod-price').value = '';
+                    alert('Ürün eklendi!');
+                });
+            }
+        }
+
+        function addWasteEntry() {
+            const prod = document.getElementById('w-product').value;
+            const amount = parseFloat(document.getElementById('w-amount').value);
+            const reason = document.getElementById('w-reason').value;
+
+            if (prod && !isNaN(amount)) {
+                const unitPrice = productsData[prod] ? productsData[prod].fiyat : 0;
+                const totalCost = amount * unitPrice;
+
+                db.ref('zayiler').push({
+                    personel: currentUser.name,
+                    urun: prod,
+                    miktar: amount,
+                    neden: reason,
+                    tutar: totalCost,
+                    tarih: new Date().toLocaleString('tr-TR')
+                }).then(() => {
+                    closeModal('modal-waste');
+                    document.getElementById('w-amount').value = '';
+                });
+            }
+        }
+
+        function initApp() {
+            db.ref('urunler').on('value', snap => {
+                productsData = snap.val() || {};
+                const sel = document.getElementById('w-product');
+                sel.innerHTML = '';
+                for (let p in productsData) {
+                    sel.innerHTML += `<option value="${p}">${p} (${productsData[p].fiyat} ₺)</option>`;
+                }
+            });
+
+            db.ref('zayiler').on('value', snap => {
+                wasteData = snap.val() || {};
+                renderWasteTable();
+            });
+        }
+
+        function renderWasteTable() {
+            const tbody = document.getElementById('waste-table-body');
+            tbody.innerHTML = '';
+            for (let id in wasteData) {
+                const w = wasteData[id];
+                const isAdmin = currentUser && currentUser.role === 'admin';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${w.tarih}</td>
+                        <td><strong>${w.personel}</strong></td>
+                        <td>${w.urun}</td>
+                        <td>${w.miktar}</td>
+                        <td><span class="badge" style="background:rgba(244,67,54,0.2); color:#f44336;">${w.neden}</span></td>
+                        <td style="color:var(--danger); font-weight:bold;">${(w.tutar || 0).toFixed(2)} ₺</td>
+                        ${isAdmin ? `<td><button class="btn btn-danger btn-sm" onclick="db.ref('zayiler/${id}').remove()">Sil</button></td>` : ''}
+                    </tr>
+                `;
+            }
+        }
+
+        // CSV / EXCEL İNDİRME (Sadece Admin)
+        function exportToCSV() {
+            let csv = "Tarih,Personel,Urun,Miktar,Neden,Tutar (TL)\n";
+            for (let id in wasteData) {
+                const w = wasteData[id];
+                csv += `"${w.tarih}","${w.personel}","${w.urun}","${w.miktar}","${w.neden}","${w.tutar}"\n`;
+            }
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Aylik_Zayi_Raporu_${new Date().toLocaleDateString('tr-TR')}.csv`;
+            link.click();
+        }
+
+        // AYI KAPAT VE SIFIRLA (Sadece Admin)
+        function resetMonthData() {
+            if (confirm("DİKKAT: Mevcut ayın tüm zayi kayıtları silinecek ve yeni aya başlanacak! Onaylıyor musunuz?")) {
+                db.ref('zayiler').remove().then(() => {
+                    alert("Zayi kayıtları başarıyla sıfırlandı. Yeni ay başlatıldı!");
+                });
+            }
+        }
+    </script>
+</body>
+</html>
