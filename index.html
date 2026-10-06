@@ -170,12 +170,14 @@
                 <label style="font-size:0.85rem; color:var(--text-muted);">Miktar</label>
                 <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2">
             </div>
-            <div class="form-group" style="position: relative;">
-    <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün (Yazarak Ara)</label>
-    <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın (Örn: Çilek)..." oninput="filterProducts()">
-    <div id="product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:180px; overflow-y:auto; z-index:1100;"></div>
-    <input type="hidden" id="w-product">
-</div>
+                        <!-- ZAYİ EDİLEN ÜRÜN (KLAVYEDEN ARAMALI) -->
+            <div class="form-group" style="position: relative; margin-bottom: 12px;">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün</label>
+                <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın (Örn: Çilek)..." oninput="filterProducts()" autocomplete="off" style="margin-bottom:0;">
+                <div id="product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:160px; overflow-y:auto; z-index:1100;"></div>
+                <input type="hidden" id="w-product">
+            </div>
+
             <!-- Ürün Arama Alanı -->
             <div class="form-group" style="position: relative;">
                 <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün (Yazarak Ara)</label>
