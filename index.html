@@ -165,12 +165,14 @@
     <div id="product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:180px; overflow-y:auto; z-index:1100;"></div>
     <input type="hidden" id="w-product">
 </div>
-<div class="form-group" style="position: relative;">
-    <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün (Yazarak Ara)</label>
-    <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın (Örn: Çilek)..." oninput="filterProducts()">
-    <div id="product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:180px; overflow-y:auto; z-index:1100;"></div>
-    <input type="hidden" id="w-product">
-</div>
+            <!-- Ürün Arama Alanı -->
+            <div class="form-group" style="position: relative;">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün (Yazarak Ara)</label>
+                <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın..." oninput="filterProducts()" autocomplete="off">
+                <div id="product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:160px; overflow-y:auto; z-index:1100;"></div>
+                <input type="hidden" id="w-product">
+            </div>
+
                     <option value="Dökülme / Düşürme">Dökülme / Düşürme</option>
                     <option value="SKT Geçti / Bozuldu">SKT Geçti / Bozuldu</option>
                     <option value="Hatalı Hazırlık">Hatalı Hazırlık</option>
