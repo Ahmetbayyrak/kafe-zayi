@@ -127,22 +127,7 @@
 
                 <!-- TAB 2: ADMIN PANELİ -->
                 <div id="tab-admin" style="display:none;">
-                    <div class="card" style="border:1px solid var(--primary); margin-bottom:15px;">
-                        <h3 style="color:var(--primary); margin-bottom:10px;">📊 Gün Sonu Rapor & Sıfırlama</h3>
-                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
-                            Günün sonunda bu butona basarak zayi raporunu Excel olarak indirebilir ve sistem kayıtlarını yeni gün için otomatik temizleyebilirsiniz.
-                        </p>
-                        <button class="btn btn-success" onclick="closeDayAndExport()">📥 Günü Kapat & Raporu İndir</button>
-                    </div>
-
-                    <div class="card" style="border:1px solid var(--danger);">
-                        <h3 style="color:var(--danger); margin-bottom:10px;">🧹 Ayı Kapat & Sıfırla</h3>
-                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
-                            Ay sonunda tüm biriken kayıtları Excel olarak indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
-                        </p>
-                        <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Sıfırla</button>
-                                            <!-- YENİ ÜRÜN EKLEME KARTI -->
-                    <div class="card" style="border:1px solid var(--accent);">
+                    <div class="card" style="border:1px solid var(--accent); margin-bottom:15px;">
                         <h3 style="color:var(--accent); margin-bottom:10px;">➕ Yeni Ürün & Fiyat Ekle</h3>
                         <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
                             Sisteme yeni bir ürün ve birim fiyatı tanımlayabilirsiniz.
@@ -152,6 +137,35 @@
                         <button class="btn btn-primary" onclick="addNewProduct()">Ürünü Ekle</button>
                     </div>
 
+                    <div class="card" style="border:1px solid var(--primary); margin-bottom:15px;">
+                        <h3 style="color:var(--primary); margin-bottom:10px;">📊 Gün Sonu Rapor & Sıfırlama</h3>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+                            Günün sonunda bu butona basarak zayi raporunu Excel olarak indirebilir ve sistem kayıtlarını yeni gün için otomatik temizleyebilirsiniz.
+                        </p>
+                        <button class="btn btn-success" onclick="closeDayAndExport()">📥 Günü Kapat & Raporu İndir</button>
+                    </div>
+                    
+                    <div class="card" style="border:1px solid var(--danger);">
+                        <h3 style="color:var(--danger); margin-bottom:10px;">🧹 Ayı Kapat & Sıfırla</h3>
+                        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+                            Ay sonunda tüm biriken kayıtları Excel olarak indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
+                        </p>
+                        <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Sıfırla</button>
+                        <!-- ADMIN ÜRÜN FİYAT GÜNCELLEME -->
+        <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h3>Ürün Fiyatları Yönetimi</h3>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                    <select id="price-product-select" class="form-control" onchange="loadCurrentPrice()">
+                        <!-- Ürünler buraya JS ile dolacak -->
+                    </select>
+                    <input type="number" id="price-input" class="form-control" placeholder="Yeni Fiyat (₺)" step="0.01">
+                    <button class="btn btn-primary" onclick="updateProductPrice()" style="white-space: nowrap;">Güncelle</button>
+                </div>
+            </div>
+        </div>
                     </div>
                 </div>
             </main>
@@ -162,15 +176,8 @@
     <div id="modal-waste" class="modal-overlay">
         <div class="modal">
             <h3 style="margin-bottom:14px;">🗑️ Zayi Ekle</h3>
-            <div class="form-group">
-                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün</label>
-                <select id="w-product" class="form-control"></select>
-            </div>
-            <div class="form-group">
-                <label style="font-size:0.85rem; color:var(--text-muted);">Miktar</label>
-                <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2">
-            </div>
-                        <!-- ZAYİ EDİLEN ÜRÜN (KLAVYEDEN ARAMALI) -->
+            
+            <!-- ZAYİ EDİLEN ÜRÜN (KLAVYEDEN ARAMALI) -->
             <div class="form-group" style="position: relative; margin-bottom: 12px;">
                 <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün</label>
                 <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın (Örn: Çilek)..." oninput="filterProducts()" autocomplete="off" style="margin-bottom:0;">
@@ -178,22 +185,23 @@
                 <input type="hidden" id="w-product">
             </div>
 
-            <!-- Ürün Arama Alanı -->
-            <div class="form-group" style="position: relative;">
-                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Edilen Ürün (Yazarak Ara)</label>
-                <input type="text" id="w-product-search" class="form-control" placeholder="Ürün adı yazın..." oninput="filterProducts()" autocomplete="off">
-                <div id="product-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); max-height:160px; overflow-y:auto; z-index:1100;"></div>
-                <input type="hidden" id="w-product">
+            <!-- MİKTAR -->
+            <div class="form-group">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Miktar</label>
+                <input type="number" step="any" id="w-amount" class="form-control" placeholder="Örn: 2">
             </div>
 
+            <!-- ZAYİ NEDENİ -->
+            <div class="form-group">
+                <label style="font-size:0.85rem; color:var(--text-muted);">Zayi Nedeni</label>
+                <select id="w-reason" class="form-control">
                     <option value="Dökülme / Düşürme">Dökülme / Düşürme</option>
                     <option value="SKT Geçti / Bozuldu">SKT Geçti / Bozuldu</option>
                     <option value="Hatalı Hazırlık">Hatalı Hazırlık</option>
                     <option value="İkram / Personel">İkram / Personel</option>
-                    <option value="Personel Tüketim / ">Personel Tüketim / </option>
-                    <option value="Müşteri İade / "> Müşteri İade / </option>
                 </select>
             </div>
+
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
                 <button class="btn btn-outline" onclick="closeModal('modal-waste')">İptal</button>
                 <button class="btn btn-danger" onclick="addWasteEntry()">Zayi Kaydet</button>
@@ -217,9 +225,9 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ÜRÜNLER VE BİRİM FİYATLARI (BURADAN DÜZENLEYEBİLİRSİN)
+        // ÜRÜNLER VE BİRİM FİYATLARI
         const PRODUCTS = {
-"STRAWBERRY CUP (ADET)": 50.0,
+            "STRAWBERRY CUP (ADET)": 50.0,
 "ÇİLEK RÜYASI (ADET)": 50.0,
 "LOTUS CUP (ADET)": 65.0,
 "SUPANGLE CUP (ADET)": 45.0,
@@ -356,8 +364,9 @@
 "ÇİKOLATALI CHEESECAKE (ADET)": 77.14
         };
 
+
         const USERS = {
-            "admin": { pass: "03vh76hg", name: "Yönetici (Admin)", role: "admin" },
+                     "admin": { pass: "03vh76hg", name: "Yönetici (Admin)", role: "admin" },
             "ahmet": { pass: "1", name: "Ahmet Bayrak", role: "staff" },
             "öner": { pass: "2", name: "Öner Yıldırım", role: "staff" },
             "alperen": { pass: "3", name: "Alperen Akça", role: "staff" },
@@ -382,6 +391,7 @@
             "arda": { pass: "22", name: "Yasin Arda Kalenderoğlu", role: "staff" },
             "ömer": { pass: "23", name: "Ömer Arda Yaylı", role: "staff" },
             "melike": { pass: "24", name: "Melike İner", role: "staff" },
+            "anıl": { pass: "25", name: "Anıl Kılakay", role: "staff" },
 
         };
 
@@ -419,15 +429,58 @@
             document.getElementById('tab-admin').style.display = t === 'admin' ? 'block' : 'none';
         }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function openModal(id) { 
+            document.getElementById('w-product-search').value = '';
+            document.getElementById('w-product').value = '';
+            document.getElementById('product-dropdown').style.display = 'none';
+            document.getElementById(id).classList.add('active'); 
+        }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
+        // ÜRÜN ARAMA FİLTRESİ
+        function filterProducts() {
+            const query = document.getElementById('w-product-search').value.toLowerCase();
+            const dropdown = document.getElementById('product-dropdown');
+            dropdown.innerHTML = '';
+            
+            let matches = 0;
+            for (let p in PRODUCTS) {
+                if (p.toLowerCase().includes(query)) {
+                    matches++;
+                    const div = document.createElement('div');
+                    div.style.padding = "10px";
+                    div.style.cursor = "pointer";
+                    div.style.borderBottom = "1px solid var(--border)";
+                    div.style.fontSize = "0.9rem";
+                    div.textContent = p;
+                    div.onmousedown = function(e) {
+                        e.preventDefault();
+                        document.getElementById('w-product-search').value = p;
+                        document.getElementById('w-product').value = p;
+                        dropdown.style.display = 'none';
+                    };
+                    dropdown.appendChild(div);
+                }
+            }
+            
+            if (matches > 0 && query.length > 0) {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
         function addWasteEntry() {
-            const prod = document.getElementById('w-product').value;
+            const prod = document.getElementById('w-product').value || document.getElementById('w-product-search').value;
             const amount = parseFloat(document.getElementById('w-amount').value);
             const reason = document.getElementById('w-reason').value;
 
-            if (prod && !isNaN(amount)) {
+            if (!prod || !PRODUCTS[prod]) {
+                alert("Lütfen listeden geçerli bir ürün seçin!");
+                return;
+            }
+
+            if (!isNaN(amount) && amount > 0) {
                 const unitPrice = PRODUCTS[prod] || 0;
                 const totalCost = amount * unitPrice;
 
@@ -441,20 +494,48 @@
                 }).then(() => {
                     closeModal('modal-waste');
                     document.getElementById('w-amount').value = '';
+                    document.getElementById('w-product-search').value = '';
+                    document.getElementById('w-product').value = '';
                 });
+            } else {
+                alert("Lütfen geçerli bir miktar girin!");
             }
         }
 
-        function initApp() {
-            const sel = document.getElementById('w-product');
-            sel.innerHTML = '';
-            for (let p in PRODUCTS) {
-                sel.innerHTML += `<option value="${p}">${p}</option>`;
+        // YENİ ÜRÜN EKLEME (ADMIN)
+        function addNewProduct() {
+            const name = document.getElementById('new-prod-name').value.trim();
+            const price = parseFloat(document.getElementById('new-prod-price').value);
+
+            if (!name) {
+                alert("Lütfen ürün adı girin!");
+                return;
+            }
+            if (isNaN(price) || price <= 0) {
+                alert("Lütfen geçerli bir birim fiyat girin!");
+                return;
             }
 
+            db.ref('urunler/' + name.replace(/[.#$[\]]/g, '_')).set(price).then(() => {
+                alert(`"${name}" başarıyla eklendi!`);
+                document.getElementById('new-prod-name').value = '';
+                document.getElementById('new-prod-price').value = '';
+            }).catch(err => {
+                alert("Hata: " + err.message);
+            });
+        }
+
+        function initApp() {
             db.ref('zayiler').on('value', snap => {
                 wasteData = snap.val() || {};
                 renderWasteTable();
+            });
+
+            db.ref('urunler').on('value', snap => {
+                const customProducts = snap.val() || {};
+                for (let p in customProducts) {
+                    PRODUCTS[p] = customProducts[p];
+                }
             });
         }
 
@@ -466,7 +547,6 @@
             for (let id in wasteData) {
                 const w = wasteData[id];
                 
-                // Eğer kullanıcı admin değilse, sadece kendi kayıtlarını göster
                 if (!isAdmin && w.personel !== currentUser.name) {
                     continue;
                 }
@@ -484,7 +564,6 @@
             }
         }
 
-        // GÜNÜ KAPAT, EXCEL İNDİR VE SIFIRLA
         function closeDayAndExport() {
             if (Object.keys(wasteData).length === 0) {
                 alert("İndirilecek zayi kaydı bulunmuyor.");
@@ -509,7 +588,6 @@
             }
         }
 
-        // AYI KAPAT & SIFIRLA
         function resetMonthData() {
             if (confirm("DİKKAT: Mevcut ayın tüm zayi kayıtları silinecek ve yeni aya başlanacak! Onaylıyor musunuz?")) {
                 db.ref('zayiler').remove().then(() => {
