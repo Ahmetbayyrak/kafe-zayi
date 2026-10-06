@@ -151,10 +151,19 @@
                             Ay sonunda tüm biriken kayıtları Excel olarak indirip sıfırdan yeni aya başlamak için kullanabilirsiniz.
                         </p>
                         <button class="btn btn-danger" onclick="resetMonthData()">🧹 Ayı Kapat & Sıfırla</button>
-                        <!-- ADMIN ÜRÜN FİYAT GÜNCELLEME -->
+                       <!-- ADMIN ÜRÜN FİYAT GÜNCELLEME -->
         <div class="card" style="margin-top: 20px;">
             <div class="card-header">
                 <h3>Ürün Fiyatları Yönetimi</h3>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                    <select id="price-product-select" class="form-control" onchange="loadCurrentPrice()">
+                        <!-- Ürünler otomatik dolacak -->
+                    </select>
+                    <input type="number" id="price-input" class="form-control" placeholder="Yeni Fiyat (₺)" step="0.01">
+                    <button class="btn btn-primary" onclick="updateProductPrice()" style="white-space: nowrap;">Güncelle</button>
+                </div>
             </div>
             <div class="card-body">
                 <div style="display: flex; gap: 10px; margin-bottom: 12px;">
@@ -199,6 +208,9 @@
                     <option value="SKT Geçti / Bozuldu">SKT Geçti / Bozuldu</option>
                     <option value="Hatalı Hazırlık">Hatalı Hazırlık</option>
                     <option value="İkram / Personel">İkram / Personel</option>
+                     <option value="Personel Tüketim / ">Personel Tüketim / </option>
+                    <option value="Müşteri İade / "> Müşteri İade / </option>
+
                 </select>
             </div>
 
